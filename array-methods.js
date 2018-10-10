@@ -28,9 +28,9 @@ hundredThousandairs = dataset.bankBalances.filter(function (element) {
 // set sumOfBankBalances to be the sum of all value held at `amount` for each bank object
 var sumOfBankBalances = null;
 
-sumOfBankBalances = dataset.bankBalances.reduce(function(element, current) {
+sumOfBankBalances = dataset.bankBalances.reduce(function (element, current) {
   sumOfBankBalances += parseFloat(current.amount) * 1.00
-  return parseFloat(Math.round(sumOfBankBalances * 100) / 100) 
+  return parseFloat(Math.round(sumOfBankBalances * 100) / 100)
 }, 0)
 
 
@@ -45,20 +45,20 @@ sumOfBankBalances = dataset.bankBalances.reduce(function(element, current) {
   take each `amount` and add 18.9% interest to it rounded to the nearest dollar 
   and then sum it all up into one value saved to `sumOfInterests`
  */
-    
+
 var sumOfInterests = null;
 
 const selectedStates = ['WI', 'IL', 'WY', 'OH', 'GA', 'DE'];
 
 let states = dataset.bankBalances.filter(function (element) {
-  if (selectedStates.includes(element.state) ) {
+  if (selectedStates.includes(element.state)) {
     return element;
   }
 });
 
 let zero = 0
 
-sumOfInterests = states.reduce(function(element, current) {
+sumOfInterests = states.reduce(function (element, current) {
   zero += parseFloat(current.amount) * 0.189
   return parseFloat(Math.round(zero * 100) / 100) - 1.10;
 }, 0)
@@ -88,7 +88,7 @@ function aggregateAmountsOfAllStates(prev, curr) {
     return prev;
   } else {
     prev[curr.state] += Math.round(Number(curr.amount));
-    prev[curr.state] = Math.round(prev[curr.state] );
+    prev[curr.state] = Math.round(prev[curr.state]);
     return prev;
   }
 }
@@ -117,52 +117,24 @@ stateSums = setStateSums();
   )
  */
 var sumOfHighInterests = null;
+//string, null, boolean, number, obj, undef
 
-var sumOfHighInterests = Object.keys(stateSums)
+var sumOfHighInterests = Object.keys(stateSums) // state and intrest in arrays of arrays
   // only accounts in states that are not in the ones listed
   .filter(function (state) {
-    return ['WI','IL','WY','OH','GA','DE'].indexOf( state ) >= 1
-    })
-  // convert interest
+    // console.log('lol', state)
+    return ['WI', 'IL', 'WY', 'OH', 'GA', 'DE'].indexOf(state) < 0
+  })
+
+  // // convert interest
   .map(function (stateKey) {
-    // console.log(stateKey)
-    return {
-      state : stateKey,
-      interest : Math.round( stateSums[stateKey] * 0.189) 
-
-    };
+    // console.log(' pop ' , stateSums)
+    return Math.round(stateSums[stateKey] * 0.189);
   })
-
-  .filter (function (stateSums) {
-    if(stateSums.interest >= 50000){
-      console.log(stateSums)
-      return stateSums
-    } 
-  })
-  
-  // add all state interests, return rounded to dollar
-  .reduce(function ( element, currentAccount ) {
-    // console.log( element, currentAccount)
-    return element + currentAccount.interest;
+  // console.log(' y ', sumOfHighInterests)
+  .reduce(function (accum, current) {
+    return accum + current;
   }, 0);
-
-sumOfHighInterests = Math.round( sumOfHighInterests * 100) / 100;
-
-console.log(sumOfBankBalances);
-
-
-// let unselectedStates =  ['WI', 'IL', 'WY', 'OH', 'GA', 'DE'];
-
-// let sumOfHighInterests = dataset.bankBalances.filter(function (element) {
-//   if (unselectedStates.includes(element.state) ) {
-//     return element;
-//   }
-// })
-// .reduce(function (accum, curr){ 
-//   if (!accum.hasOwnProperty(curr.unselectedStates)){
-//     curr.unselectedStates >= 50000
-//   }
-// }) 
 
 //filter take away states and next to over 50,000;
 /*
@@ -213,13 +185,13 @@ var anyStatesInHigherStateSum = null;
 
 
 module.exports = {
-  hundredThousandairs : hundredThousandairs,
-  sumOfBankBalances : sumOfBankBalances,
-  sumOfInterests : sumOfInterests,
-  sumOfHighInterests : sumOfHighInterests,
-  stateSums : stateSums,
-  lowerSumStates : lowerSumStates,
-  higherStateSums : higherStateSums,
-  areStatesInHigherStateSum : areStatesInHigherStateSum,
-  anyStatesInHigherStateSum : anyStatesInHigherStateSum
+  hundredThousandairs: hundredThousandairs,
+  sumOfBankBalances: sumOfBankBalances,
+  sumOfInterests: sumOfInterests,
+  sumOfHighInterests: sumOfHighInterests,
+  stateSums: stateSums,
+  lowerSumStates: lowerSumStates,
+  higherStateSums: higherStateSums,
+  areStatesInHigherStateSum: areStatesInHigherStateSum,
+  anyStatesInHigherStateSum: anyStatesInHigherStateSum
 };
